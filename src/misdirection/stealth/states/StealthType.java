@@ -1,4 +1,4 @@
-package main.stealth.states;
+package misdirection.stealth.states;
 
 /**
  * Enum which stores the different stealth types returned by the StealthStateHandler.

@@ -1,9 +1,9 @@
-package main.stealth;
+package misdirection.stealth;
 
 import arc.struct.Seq;
-import main.stealth.states.StealthState;
-import main.stealth.states.StealthType;
-import main.stealth.units.DelegateUnit;
+import misdirection.stealth.states.StealthState;
+import misdirection.stealth.states.StealthType;
+import misdirection.stealth.units.DelegateUnit;
 import mindustry.gen.Groups;
 import mindustry.gen.Unit;
 

@@ -1,10 +1,8 @@
-package main.stealth.states;
+package misdirection.stealth.states;
 
-import main.stealth.StealthCondition;
-import main.stealth.units.DelegateUnit;
-import mindustry.gen.MechUnit;
+import misdirection.stealth.StealthCondition;
+import misdirection.stealth.units.DelegateUnit;
 import mindustry.gen.Unit;
-import mindustry.gen.UnitEntity;
 
 /**
  * An interface used to determine if the unit should be invisible or not, supplied by the source of cloaking.
