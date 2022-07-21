@@ -3,13 +3,13 @@ package misdirection;
 import arc.Core;
 import arc.struct.Seq;
 import arc.util.*;
+import mindustry.gen.UnitEntity;
+import misdirection.content.ExampleUnits;
 import misdirection.stealth.StealthStateHandler;
 import mindustry.Vars;
 import mindustry.mod.*;
 import rhino.ImporterTopLevel;
-import rhino.NativeJavaClass;
 import rhino.NativeJavaPackage;
-import rhino.ScriptableObject;
 
 public class Misdirection extends Mod{
 
@@ -30,7 +30,8 @@ public class Misdirection extends Mod{
                 "misdirection",
                 "misdirection.stealth",
                 "misdirection.stealth.units",
-                "misdirection.stealth.states"
+                "misdirection.stealth.states",
+                "misdirection.content"
         );
 
         packages.each(name -> {
@@ -48,7 +49,7 @@ public class Misdirection extends Mod{
 
     @Override
     public void loadContent(){
-        Log.info("Loading some example content./.");
+        ExampleUnits.load();
     }
 
 }

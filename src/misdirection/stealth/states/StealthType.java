@@ -5,7 +5,7 @@ package misdirection.stealth.states;
  * Determines how the entity being cloaked is handled
  */
 public enum StealthType {
-    INVISIBILITY,
+    INVISIBLE,
     DEEP_STEALTH,
     FAULTY
 }

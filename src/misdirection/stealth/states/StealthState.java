@@ -9,7 +9,7 @@ import mindustry.gen.Unit;
  * "Determines" the behaviour of the stealth.
  */
 public abstract class StealthState {
-    public Unit cloaked;
+    public Unit unit;
     public DelegateUnit delegate;
 
     public abstract StealthType type();

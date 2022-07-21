@@ -11,8 +11,9 @@ import mindustry.gen.Unit;
  * A singleton class that handles all stealth states with their corresponding units
  */
 public class StealthStateHandler {
-    public Seq<StealthState> states;
+    public Seq<StealthState> states = new Seq<>();
     private static StealthStateHandler instance;
+    private static boolean cloaked = false;
 
     public static StealthStateHandler getInstance() {
         if(instance == null) instance = new StealthStateHandler();
@@ -21,7 +22,7 @@ public class StealthStateHandler {
 
     /**
      * Handles cloaking units depending on the stealth type. Use only if the specified StealthType is unknown.
-     * Ex: Units which change StealthType mid-battle.
+     * Ex: Units which change StealthType dynamically.
      *
      * @param unit The unit being cloaked
      * @param type The supplied stealth type used in cloaking the unit appropriately.
@@ -40,8 +41,8 @@ public class StealthStateHandler {
                         return condition;
                     }
                     {
-                        cloaked = unit;
-                        if(type == StealthType.INVISIBILITY) delegate = assignDelegate(unit);
+                        this.unit = unit;
+                        if(type == StealthType.INVISIBLE) delegate = assignDelegate(unit);
                         else handleCustomDelegate(unit);
                     }
             }
@@ -49,20 +50,24 @@ public class StealthStateHandler {
     }
 
     /**
-     * Assigns a delegate unit to the supplied unit. Only used for handling cases of StealthType.INVISIBILITy
+     * Assigns a delegate unit to the supplied unit. Only used for handling cases of StealthType.INVISIBILITY
      * @param cloaked The unit which is being assigned a Delegate unit.
      * @return Returns the assigned DelegateUnit instance
      */
     public DelegateUnit assignDelegate(Unit cloaked){
+        /*
         Groups.unit.removeByID(cloaked.id);
+        Groups.all.remove(cloaked);
+        Groups.draw.remove(cloaked);
+         */
         return new DelegateUnit() {
         };
     }
 
     public DelegateUnit handleCustomDelegate(Unit cloaked){
         Groups.unit.removeByID(cloaked.id);
-        return new DelegateUnit() {
-        };
+            return new DelegateUnit() {
+            };
     }
 
     public void handleState(Unit unit, StealthState state){
@@ -70,6 +75,19 @@ public class StealthStateHandler {
     }
 
     public void handleStealthEnd(Unit unit, StealthState state){
+        states.remove(state);
+    }
 
+    public boolean isCloaked(Unit unit){
+        states.each(s -> {
+            if(s.unit == unit && s.owner().valid()) cloaked = true;
+        });
+        return cloaked;
+    }
+
+    public void update(){
+        states.each(state -> {
+            if(!state.owner().valid()) handleStealthEnd(state.unit, state);
+        });
     }
 }
