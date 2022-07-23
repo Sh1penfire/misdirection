@@ -14,7 +14,7 @@ main: "misdirection.Misdirection"
 description: "A modification to the simulation made to test the stealth module included in WTTF's stealth ops training program."
 
 #the mod version
-version: ersion aversion
+version: ersion aversion|p1
 
 #the minimum game build required to run this mod
 minGameVersion: 136
