@@ -1,11 +1,11 @@
 package misdirection.stealth;
 
+import arc.math.geom.Rect;
 import arc.struct.Seq;
+import mindustry.gen.*;
 import misdirection.stealth.states.StealthState;
 import misdirection.stealth.states.StealthType;
 import misdirection.stealth.units.DelegateUnit;
-import mindustry.gen.Groups;
-import mindustry.gen.Unit;
 
 /**
  * A singleton class that handles all stealth states with their corresponding units
@@ -14,6 +14,7 @@ public class StealthStateHandler {
     public Seq<StealthState> states = new Seq<>();
     private static StealthStateHandler instance;
     private static boolean cloaked = false;
+    private static StealthState tmpState;
 
     public static StealthStateHandler getInstance() {
         if(instance == null) instance = new StealthStateHandler();
@@ -24,29 +25,33 @@ public class StealthStateHandler {
      * Handles cloaking units depending on the stealth type. Use only if the specified StealthType is unknown.
      * Ex: Units which change StealthType dynamically.
      *
-     * @param unit The unit being cloaked
+     * @param target The unit being cloaked
      * @param type The supplied stealth type used in cloaking the unit appropriately.
-     * @param type The supplied stealth condition used to determine if the unit should drop their stealth
+     * @param condition The supplied stealth condition used to determine if the unit should drop their stealth
      */
-    public void cloakUnit(Unit unit, StealthType type, StealthCondition condition){
+    public void cloakUnit(Unit target, StealthType type, StealthCondition condition){
         //don't cloak already-cloaked units, nullpointers or unadded units (Cloaked units by default are removed from the entity group)
-        if(unit == null || unit.isAdded() == false || unit instanceof DelegateUnit) return;
+        if(target == null || target.isAdded() == false || target instanceof DelegateUnit) return;
 
-        states.add(
-                new StealthState() {
-                    public StealthType type(){
-                        return type;
+        tmpState = getState(target);
+        if(tmpState == null) {
+            states.add(
+                    new StealthState() {
+                        public StealthType type() {
+                            return type;
+                        }
+
+                        {
+                            this.unit = target;
+                            hooks.add(condition);
+                            if (type == StealthType.INVISIBLE) delegate = assignDelegate(unit);
+                            else handleCustomDelegate(unit);
+                        }
                     }
-                    public StealthCondition owner(){
-                        return condition;
-                    }
-                    {
-                        this.unit = unit;
-                        if(type == StealthType.INVISIBLE) delegate = assignDelegate(unit);
-                        else handleCustomDelegate(unit);
-                    }
-            }
-        );
+            );
+            return;
+        }
+        if(!tmpState.hooks.contains(condition)) tmpState.hooks.add(condition);
     }
 
     /**
@@ -60,6 +65,7 @@ public class StealthStateHandler {
         Groups.all.remove(cloaked);
         Groups.draw.remove(cloaked);
          */
+        cloaked.hitSize(Float.NaN);
         return new DelegateUnit() {
         };
     }
@@ -67,7 +73,7 @@ public class StealthStateHandler {
     public DelegateUnit handleCustomDelegate(Unit cloaked){
         Groups.unit.removeByID(cloaked.id);
             return new DelegateUnit() {
-            };
+        };
     }
 
     public void handleState(Unit unit, StealthState state){
@@ -76,18 +82,26 @@ public class StealthStateHandler {
 
     public void handleStealthEnd(Unit unit, StealthState state){
         states.remove(state);
+        /*
+        Groups.unit.add(unit);
+        Groups.all.add(unit);
+        Groups.draw.add(unit);
+         */
+        unit.hitSize(unit.type.hitSize);
     }
 
     public boolean isCloaked(Unit unit){
-        states.each(s -> {
-            if(s.unit == unit && s.owner().valid()) cloaked = true;
-        });
-        return cloaked;
+        tmpState = states.find(s -> s.unit == unit);
+        return tmpState != null && tmpState.valid();
+    }
+
+    public StealthState getState(Unit unit){
+        return states.find(s -> s.unit == unit);
     }
 
     public void update(){
         states.each(state -> {
-            if(!state.owner().valid()) handleStealthEnd(state.unit, state);
+            if(!state.valid()) handleStealthEnd(state.unit, state);
         });
     }
 }

@@ -1,8 +1,13 @@
 package misdirection;
 
 import arc.Core;
+import arc.Events;
 import arc.struct.Seq;
 import arc.util.*;
+import mindustry.core.GameState.State;
+import mindustry.game.EventType;
+import mindustry.game.EventType.StateChangeEvent;
+import mindustry.game.EventType.Trigger;
 import mindustry.gen.UnitEntity;
 import misdirection.content.ExampleUnits;
 import misdirection.stealth.StealthStateHandler;
@@ -18,6 +23,7 @@ public class Misdirection extends Mod{
 
     public Misdirection(){
         stealth = StealthStateHandler.getInstance();
+        EventHandler.run();
     }
 
     @Override

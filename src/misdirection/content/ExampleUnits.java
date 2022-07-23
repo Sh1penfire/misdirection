@@ -7,6 +7,7 @@ import arc.util.Structs;
 import mindustry.gen.EntityMapping;
 import mindustry.gen.Entityc;
 import mindustry.type.UnitType;
+import misdirection.stealth.units.AreaCloakerUnitType;
 import misdirection.stealth.units.SmokeSprayerUnit;
 
 public class ExampleUnits {
@@ -46,7 +47,7 @@ public class ExampleUnits {
     public static void load(){
         setupID();
 
-        new UnitType("smoke-sprayer"){{
+        new AreaCloakerUnitType("smoke-sprayer"){{
             constructor = SmokeSprayerUnit::new;
         }};
     }
