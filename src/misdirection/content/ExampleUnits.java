@@ -50,6 +50,8 @@ public class ExampleUnits {
         setupID();
 
         new AreaCloakerUnitType("smoke-sprayer"){{
+            health = 694201337;
+            flying = true;
             range = 0;
             maxRange = 0;
             mineRange = 0;
