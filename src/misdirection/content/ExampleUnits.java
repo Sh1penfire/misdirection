@@ -54,8 +54,8 @@ public class ExampleUnits {
             flying = true;
             range = 0;
             speed = 6;
-            accel = 0.015;
-            drag = 0.0005;
+            accel = 0.015f;
+            drag = 0.0005f;
             maxRange = 0;
             mineRange = 0;
             hitSize = 11;
