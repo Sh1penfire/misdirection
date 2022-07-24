@@ -53,6 +53,9 @@ public class ExampleUnits {
             health = 694201337;
             flying = true;
             range = 0;
+            speed = 6;
+            accel = 0.015;
+            drag = 0.0005;
             maxRange = 0;
             mineRange = 0;
             hitSize = 11;
