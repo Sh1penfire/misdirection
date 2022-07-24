@@ -4,8 +4,10 @@ import arc.func.Prov;
 import arc.struct.ObjectIntMap;
 import arc.struct.ObjectMap.Entry;
 import arc.util.Structs;
+import mindustry.content.UnitTypes;
 import mindustry.gen.EntityMapping;
 import mindustry.gen.Entityc;
+import mindustry.graphics.Pal;
 import mindustry.type.UnitType;
 import misdirection.stealth.units.AreaCloakerUnitType;
 import misdirection.stealth.units.SmokeSprayerUnit;
@@ -48,7 +50,12 @@ public class ExampleUnits {
         setupID();
 
         new AreaCloakerUnitType("smoke-sprayer"){{
+            range = 0;
+            maxRange = 0;
+            mineRange = 0;
+            hitSize = 11;
             constructor = SmokeSprayerUnit::new;
+            outlineColor = Pal.darkOutline;
         }};
     }
 }

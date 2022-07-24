@@ -22,7 +22,7 @@ import static misdirection.stealth.units.AreaCloakerUnitType.areaCloakerCond;
 
 public class SmokeSprayerUnit extends UnitEntity implements ElevationMovec {
 
-    public float warmup = 0, spinspeed = 5;
+    public float warmup = 0, spinspeed = 50;
 
     @Override
     public String toString() {
@@ -38,15 +38,19 @@ public class SmokeSprayerUnit extends UnitEntity implements ElevationMovec {
     public void update() {
         super.update();
         dead();
-        if(warmup == 1) {
             Unit owner = this;
             Groups.unit.intersect(x - range()/2, y - range()/2, range(), range(), u -> {
-                if (u.isFlying() && u.dst(owner) < range()/2 && !(u.type instanceof AreaCloakerUnitType)) {
-                    if(!stealth.isCloaked(u)) Fx.smokeCloud.at(u.x, u.y, u.physicSize());
-                    stealth.cloakUnit(u, StealthType.INVISIBLE, areaCloakerCond);
-                }
+                    if (warmup == 1 && u.isFlying() && u.dst(owner) < range()/2 && !(u.type instanceof AreaCloakerUnitType)) {
+                        if(!stealth.isCloaked(u)) Fx.smokeCloud.at(u.x, u.y, u.physicSize());
+                        stealth.cloakUnit(u, StealthType.INVISIBLE, areaCloakerCond);
+                        return;
+                    }
+                    if(u.team != team && u.targetable(team) && u.dst(this) < hitSize + 5) {
+                        u.damage(hitSize / 3 * Time.delta * warmup);
+                        u.health = u.health - (u.health * 1/100) * Time.delta;
+                        if(Mathf.chance(0.06f)) Fx.smokeCloud.at(u.x, u.y, u.rotation, u.dead);
+                    }
             });
-        }
         if(Mathf.chance(warmup/15 * Time.delta)) Fx.smoke.at(x + Mathf.range(range()/2), y + Mathf.range(range()/2));
         rotation += (Interp.smooth.apply(warmup) * spinspeed) * Time.delta;
         warmup = Mathf.clamp(warmup + Time.delta * 0.0015f, 0, 1);
