@@ -11,6 +11,7 @@ import mindustry.content.Fx;
 import mindustry.entities.EntityCollisions;
 import mindustry.game.Team;
 import mindustry.gen.*;
+import mindustry.type.UnitType;
 import misdirection.Misdirection;
 import misdirection.stealth.StealthCondition;
 import misdirection.stealth.states.StealthType;
@@ -22,6 +23,7 @@ import static misdirection.stealth.units.AreaCloakerUnitType.areaCloakerCond;
 
 public class SmokeSprayerUnit extends UnitEntity implements ElevationMovec {
 
+    public AreaCloakerUnitType type1 = null;
     public float warmup = 0, spinspeed = 5;
 
     @Override
@@ -32,6 +34,12 @@ public class SmokeSprayerUnit extends UnitEntity implements ElevationMovec {
     @Override
     public boolean targetable(Team targeter) {
         return super.targetable(targeter);
+    }
+
+    @Override
+    public void setType(UnitType type) {
+        super.setType(type);
+        if(type instanceof AreaCloakerUnitType) type1 = (AreaCloakerUnitType) type;
     }
 
     @Override
@@ -59,7 +67,7 @@ public class SmokeSprayerUnit extends UnitEntity implements ElevationMovec {
 
     @Override
     public float range() {
-        return 120;
+        return type1.area(this);
     }
 
     @Override
