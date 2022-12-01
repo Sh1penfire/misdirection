@@ -58,7 +58,7 @@ public class ExampleUnits {
             drag = 0.0005f;
             maxRange = 0;
             mineRange = 0;
-            hitSize = 11;
+            hitSize = 12;
             constructor = SmokeSprayerUnit::new;
             outlineColor = Pal.darkOutline;
         }};
